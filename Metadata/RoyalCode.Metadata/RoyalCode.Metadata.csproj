@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <langversion>latest</langversion>
   </PropertyGroup>
 
 </Project>

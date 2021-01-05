@@ -26,10 +26,37 @@ namespace RoyalCode.Metadata.Models
         protected Dictionary<Type, object> settings;
 
         /// <summary>
+        /// MetaModel vinculado a este metadados. Normalmente o model é um singleton.
+        /// </summary>
+        /// <value>O MetaModel deste metadados.</value>
+        public virtual MetaModel Model { get; }
+
+        /// <summary>
+        /// <para>
+        ///     Metadados pai deste.
+        /// </para>
+        /// <para>
+        ///     Pode ser o mesmo que o <see cref="Model"/>, quando o filho (este) é direto do <see cref="Model"/>.
+        /// </para>
+        /// </summary>
+        /// <value>Um MetaBase que deu origem a este.</value>
+        public virtual MetaBase Parent { get; }
+
+        /// <summary>
         /// Construtor que inicializa <see cref="settings"/>.
         /// </summary>
-        public MetaBase()
+        protected MetaBase(MetaModel metaModel, MetaBase parent)
         {
+            Model = metaModel ?? throw new ArgumentNullException(nameof(metaModel));
+            Parent = parent;
+            settings = new Dictionary<Type, object>();
+        }
+
+        /// <summary>
+        /// Construtor interno para o <see cref="Model"/>.
+        /// </summary>
+        internal protected MetaBase()
+        { 
             settings = new Dictionary<Type, object>();
         }
 
@@ -38,7 +65,7 @@ namespace RoyalCode.Metadata.Models
         /// </summary>
         /// <typeparam name="TSettings">Tipo, classe, do Settings.</typeparam>
         /// <returns>Se existe o Settings para este modelo.</returns>
-        public bool HasSettings<TSettings>()
+        public virtual bool HasSettings<TSettings>()
         {
             return settings.ContainsKey(typeof(TSettings));
         }
@@ -49,7 +76,7 @@ namespace RoyalCode.Metadata.Models
         /// <typeparam name="TSettings">Settings a ser adicionado.</typeparam>
         /// <param name="value">Instância, objeto, do Settings.</param>
         /// <exception cref="ArgumentException">Se já existir um tipo, classe, de Settings no modelo.</exception>
-        public void AddSettings<TSettings>(TSettings value)
+        public virtual void AddSettings<TSettings>(TSettings value)
         {
             settings.Add(typeof(TSettings), value);
         }
@@ -59,7 +86,7 @@ namespace RoyalCode.Metadata.Models
         /// </summary>
         /// <typeparam name="TSettings">Tipo, classe, de Settings a ser obtido.</typeparam>
         /// <returns>A instância de Settings ou nulo.</returns>
-        public TSettings GetSettings<TSettings>()
+        public virtual TSettings GetSettings<TSettings>()
         {
             return (TSettings)settings[typeof(TSettings)];
         }
@@ -70,7 +97,7 @@ namespace RoyalCode.Metadata.Models
         /// <typeparam name="TSettings">Tipo, classe, de Settings a ser obtido.</typeparam>
         /// <param name="settings">Saída como instância de Settings, ou default se não existir.</param>
         /// <returns>Verdadeiro se existir, falso caso contrário.</returns>
-        public bool TryGetSettings<TSettings>(out TSettings settings)
+        public virtual bool TryGetSettings<TSettings>(out TSettings settings)
         {
             var result = HasSettings<TSettings>();
             settings = result ? GetSettings<TSettings>() : default;
@@ -82,7 +109,7 @@ namespace RoyalCode.Metadata.Models
         /// </summary>
         /// <typeparam name="TSettings">Tipo, classe, de Settings a ser obtido.</typeparam>
         /// <returns>A instância de Settings.</returns>
-        public TSettings GetOrAddSettings<TSettings>()
+        public virtual TSettings GetOrAddSettings<TSettings>()
             where TSettings : new()
         {
             if (!HasSettings<TSettings>())
@@ -97,12 +124,18 @@ namespace RoyalCode.Metadata.Models
         /// <param name="factory">Função para criar um <typeparamref name="TSettings"/>.</param>
         /// <typeparam name="TSettings">Tipo, classe, de Settings a ser obtido.</typeparam>
         /// <returns>A instância de Settings.</returns>
-        public TSettings GetOrAddSettings<TSettings>(Func<TSettings> factory)
+        public virtual TSettings GetOrAddSettings<TSettings>(Func<TSettings> factory)
         {
             if (!HasSettings<TSettings>())
                 AddSettings(factory());
 
             return GetSettings<TSettings>();
+        }
+
+        protected virtual TSettings CreateSettings<TSettings>()
+            where TSettings : new()
+        {
+            return new TSettings();
         }
     }
 }
