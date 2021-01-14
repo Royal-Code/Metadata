@@ -70,6 +70,11 @@ namespace RoyalCode.Metadata.Models
             return settings.ContainsKey(typeof(TSettings));
         }
 
+        public virtual bool HasNamedSettings<TSettings>(string name) 
+        {
+
+        }
+
         /// <summary>
         /// Adiciona um Settings ao modelo.
         /// </summary>
@@ -109,7 +114,7 @@ namespace RoyalCode.Metadata.Models
         /// </summary>
         /// <typeparam name="TSettings">Tipo, classe, de Settings a ser obtido.</typeparam>
         /// <returns>A instância de Settings.</returns>
-        public virtual TSettings GetOrAddSettings<TSettings>()
+        public virtual TSettings GetOrCreateSettings<TSettings>()
             where TSettings : new()
         {
             if (!HasSettings<TSettings>())
@@ -124,7 +129,7 @@ namespace RoyalCode.Metadata.Models
         /// <param name="factory">Função para criar um <typeparamref name="TSettings"/>.</param>
         /// <typeparam name="TSettings">Tipo, classe, de Settings a ser obtido.</typeparam>
         /// <returns>A instância de Settings.</returns>
-        public virtual TSettings GetOrAddSettings<TSettings>(Func<TSettings> factory)
+        public virtual TSettings GetOrCreateSettings<TSettings>(Func<TSettings> factory)
         {
             if (!HasSettings<TSettings>())
                 AddSettings(factory());
@@ -137,5 +142,7 @@ namespace RoyalCode.Metadata.Models
         {
             return new TSettings();
         }
+
+        private class NamedSettings<TSettings> { }
     }
 }
