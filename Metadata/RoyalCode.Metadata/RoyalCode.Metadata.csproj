@@ -3,6 +3,19 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <langversion>latest</langversion>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Title>RoyalCode.Metadata</Title>
+    <Authors>RoyalCode</Authors>
+    <Description>Library to configure metadata settings for types and members.</Description>
+    <Copyright>RoyalCode @ 2021</Copyright>
+    <PackageProjectUrl>https://github.com/Royal-Code/Metadata</PackageProjectUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/Royal-Code/Metadata/main/LICENSE</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/Royal-Code/Metadata.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Version>1.0.0-preview1</Version>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <FileVersion>1.0.0</FileVersion>
   </PropertyGroup>
 
 </Project>
