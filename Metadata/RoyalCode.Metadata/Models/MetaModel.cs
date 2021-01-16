@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using RoyalCode.Metadata.Factories;
@@ -15,7 +16,7 @@ namespace RoyalCode.Metadata.Models
         /// Instância deste singleton.
         /// </summary>
         /// <returns></returns>
-        public readonly static MetaModel Instance = new MetaModel();
+        public static readonly MetaModel Instance = new();
 
         private readonly List<IMetaModelSettingsFactory> factories = new();
 

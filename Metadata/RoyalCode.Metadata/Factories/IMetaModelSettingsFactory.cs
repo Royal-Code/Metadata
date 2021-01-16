@@ -5,7 +5,8 @@ namespace RoyalCode.Metadata.Factories
     /// <summary>
     /// Componente utilizado para criação personalizada de settings para os meta-modelos.
     /// </summary>
-    public interface IMetaModelSettingsFactory<TSettings> {
+    /// <typeparam name="TSettings">Tipo do settings que será criado.</typeparam>
+    public interface IMetaModelSettingsFactory<out TSettings> : IMetaModelSettingsFactory {
         
         /// <summary>
         /// Realiza a criação de um settings

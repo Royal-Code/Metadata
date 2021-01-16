@@ -23,7 +23,7 @@ namespace RoyalCode.Metadata.Models
         /// <summary>
         /// Settings do metadados.
         /// </summary>
-        protected Dictionary<Type, object> settings;
+        protected Dictionary<Type, object> settingsObjects;
 
         /// <summary>
         /// MetaModel vinculado a este metadados. Normalmente o model é um singleton.
@@ -43,21 +43,21 @@ namespace RoyalCode.Metadata.Models
         public virtual MetaBase Parent { get; }
 
         /// <summary>
-        /// Construtor que inicializa <see cref="settings"/>.
+        /// Construtor que inicializa <see cref="settingsObjects"/>.
         /// </summary>
         protected MetaBase(MetaModel metaModel, MetaBase parent)
         {
             Model = metaModel ?? throw new ArgumentNullException(nameof(metaModel));
             Parent = parent;
-            settings = new Dictionary<Type, object>();
+            settingsObjects = new Dictionary<Type, object>();
         }
 
         /// <summary>
         /// Construtor interno para o <see cref="Model"/>.
         /// </summary>
-        internal protected MetaBase()
+        protected internal MetaBase()
         { 
-            settings = new Dictionary<Type, object>();
+            settingsObjects = new Dictionary<Type, object>();
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace RoyalCode.Metadata.Models
         /// <returns>Se existe o Settings para este modelo.</returns>
         public virtual bool HasSettings<TSettings>()
         {
-            return settings.ContainsKey(typeof(TSettings));
+            return settingsObjects.ContainsKey(typeof(TSettings));
         }
 
         /// <summary>
@@ -78,9 +78,9 @@ namespace RoyalCode.Metadata.Models
         /// <returns>Se existe o Settings com o nome para este modelo.</returns>
         public virtual bool HasNamedSettings<TSettings>(string name) 
         {
-            if (settings.ContainsKey(typeof(NamedSettings<TSettings>)))
+            if (settingsObjects.ContainsKey(typeof(NamedSettings<TSettings>)))
             {
-                var named = (NamedSettings<TSettings>) settings[typeof(NamedSettings<TSettings>)];
+                var named = (NamedSettings<TSettings>) settingsObjects[typeof(NamedSettings<TSettings>)];
                 return named.HasSettings(name);
             }
 
@@ -95,7 +95,7 @@ namespace RoyalCode.Metadata.Models
         /// <exception cref="ArgumentException">Se já existir um tipo, classe, de Settings no modelo.</exception>
         public virtual void AddSettings<TSettings>(TSettings value)
         {
-            settings.Add(typeof(TSettings), value);
+            settingsObjects.Add(typeof(TSettings), value);
         }
 
         /// <summary>
@@ -108,14 +108,14 @@ namespace RoyalCode.Metadata.Models
         public virtual void AddNamedSettings<TSettings>(TSettings value, string name)
         {
             NamedSettings<TSettings> named;
-            if (settings.ContainsKey(typeof(NamedSettings<TSettings>)))
+            if (settingsObjects.ContainsKey(typeof(NamedSettings<TSettings>)))
             {
-                named = (NamedSettings<TSettings>) settings[typeof(NamedSettings<TSettings>)];
+                named = (NamedSettings<TSettings>) settingsObjects[typeof(NamedSettings<TSettings>)];
             }
             else
             {
                 named = new NamedSettings<TSettings>();
-                settings.Add(typeof(NamedSettings<TSettings>), named);
+                settingsObjects.Add(typeof(NamedSettings<TSettings>), named);
             }
 
             named.AddSettings(value, name);
@@ -128,7 +128,7 @@ namespace RoyalCode.Metadata.Models
         /// <returns>A instância de Settings ou nulo.</returns>
         public virtual TSettings GetSettings<TSettings>()
         {
-            return (TSettings)settings[typeof(TSettings)];
+            return (TSettings)settingsObjects[typeof(TSettings)];
         }
 
         /// <summary>
@@ -139,9 +139,9 @@ namespace RoyalCode.Metadata.Models
         /// <returns>A instância de Settings ou nulo.</returns>
         public virtual TSettings GetNamedSettings<TSettings>(string name)
         {
-            if (settings.ContainsKey(typeof(NamedSettings<TSettings>)))
+            if (settingsObjects.ContainsKey(typeof(NamedSettings<TSettings>)))
             {
-                var named = (NamedSettings<TSettings>) settings[typeof(NamedSettings<TSettings>)];
+                var named = (NamedSettings<TSettings>) settingsObjects[typeof(NamedSettings<TSettings>)];
                 return named.GetSettings(name);
             }
 
@@ -181,7 +181,6 @@ namespace RoyalCode.Metadata.Models
         /// <typeparam name="TSettings">Tipo, classe, de Settings a ser obtido.</typeparam>
         /// <returns>A instância de Settings.</returns>
         public virtual TSettings GetOrCreateSettings<TSettings>()
-            where TSettings : new()
         {
             if (!HasSettings<TSettings>())
                 AddSettings(CreateSettings<TSettings>());
@@ -196,7 +195,6 @@ namespace RoyalCode.Metadata.Models
         /// <typeparam name="TSettings">Tipo, classe, de Settings a ser obtido.</typeparam>
         /// <returns>A instância de Settings.</returns>
         public virtual TSettings GetOrCreateNamedSettings<TSettings>(string name)
-            where TSettings : new()
         {
             if (!HasNamedSettings<TSettings>(name))
                 AddNamedSettings(CreateSettings<TSettings>(), name);
@@ -234,8 +232,8 @@ namespace RoyalCode.Metadata.Models
         }
 
         protected virtual TSettings CreateSettings<TSettings>()
-            where TSettings : new()
         {
+            
             return new TSettings();
         }
 
