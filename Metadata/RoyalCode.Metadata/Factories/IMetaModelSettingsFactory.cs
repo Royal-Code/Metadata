@@ -11,10 +11,9 @@ namespace RoyalCode.Metadata.Factories
         /// <summary>
         /// Realiza a criação de um settings
         /// </summary>
-        /// <param name="model"></param>
         /// <param name="metaBase"></param>
         /// <returns></returns>
-        TSettings Create(MetaModel model, MetaBase metaBase);
+        TSettings Create(MetaBase metaBase);
     }
 
     /// <summary>

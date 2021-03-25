@@ -181,6 +181,7 @@ namespace RoyalCode.Metadata.Models
         /// <typeparam name="TSettings">Tipo, classe, de Settings a ser obtido.</typeparam>
         /// <returns>A instância de Settings.</returns>
         public virtual TSettings GetOrCreateSettings<TSettings>()
+            where TSettings : class
         {
             if (!HasSettings<TSettings>())
                 AddSettings(CreateSettings<TSettings>());
@@ -195,6 +196,7 @@ namespace RoyalCode.Metadata.Models
         /// <typeparam name="TSettings">Tipo, classe, de Settings a ser obtido.</typeparam>
         /// <returns>A instância de Settings.</returns>
         public virtual TSettings GetOrCreateNamedSettings<TSettings>(string name)
+            where TSettings : class
         {
             if (!HasNamedSettings<TSettings>(name))
                 AddNamedSettings(CreateSettings<TSettings>(), name);
@@ -232,9 +234,9 @@ namespace RoyalCode.Metadata.Models
         }
 
         protected virtual TSettings CreateSettings<TSettings>()
+            where TSettings : class
         {
-            
-            return new TSettings();
+            return Model.TryActivateSettings<TSettings>(this);
         }
 
         private class NamedSettings<TSettings>
